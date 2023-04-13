@@ -1,0 +1,74 @@
+#include <Servo.h>
+
+//Set up left motor and right motor, respectively, to their appropriate pins
+byte leftMotor = 9;
+byte rightMotor = 10;
+Servo servoL;
+Servo servoR;
+
+//Speed to move at, max is 400
+int moveSpeed = 100;
+
+void clockwiseMove(){
+  //Move left motor forward and right motor backward
+  servoL.writeMicroseconds(1500 + moveSpeed);
+  servoR.writeMicroseconds(1500 - moveSpeed);
+}
+
+void counterclockwiseMove(){
+  //Move right motor forward and left motor backward
+  servoR.writeMicroseconds(1500 + moveSpeed);
+  servoL.writeMicroseconds(1500 - moveSpeed);
+}
+
+void forwardMove(){
+  //Move the motors forward
+  servoL.writeMicroseconds(1500 + moveSpeed);
+  servoR.writeMicroseconds(1500 + moveSpeed);
+}
+
+void backwardMove(){
+  //Move the motors backward
+  servoL.writeMicroseconds(1500 - moveSpeed);
+  servoR.writeMicroseconds(1500 - moveSpeed);
+}
+
+void stopMove(){
+  //Stop both motors
+  servoR.writeMicroseconds(1500);
+  servoL.writeMicroseconds(1500);
+}
+
+void setup() {
+  //Setting up the output pins to left and right motor, respectively
+  servoL.attach(leftMotor);
+  servoR.attach(rightMotor);
+  
+
+  servoL.writeMicroseconds(1500); // send "stop" signal to ESC.
+  servoR.writeMicroseconds(1500);
+  //Maximum foward movement: 1900
+  //Maximum backward movement: 1100
+  //Stop: 1500
+  //Speed depends on how close you are to the maximum
+
+  delay(7000); // delay to allow the ESC to recognize the stopped signal
+}
+
+void loop() {
+  
+  int signal = 1550; // Set signal value, which should be between 1100 and 1900
+  servoL.writeMicroseconds(signal); // Send signal to right ESC
+
+  forwardMove();
+  delay(5000);
+
+  backwardMove();
+  delay(5000);
+
+  clockwiseMove();
+  delay(5000);
+
+  counterclockwiseMove();
+  delay(5000);
+}
